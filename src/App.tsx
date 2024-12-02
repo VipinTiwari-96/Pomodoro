@@ -1,7 +1,11 @@
-import React from "react";
+import TimerContainer from "./components/TimerContainer";
 
 function App() {
-  return <div>ds</div>;
+  return (
+    <div className="pt-40">
+      <TimerContainer />
+    </div>
+  );
 }
 
 export default App;
