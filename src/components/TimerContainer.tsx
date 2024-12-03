@@ -1,28 +1,28 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
 import { IoIosSkipForward } from "react-icons/io";
+import {
+  DEFAULT_LONG_BREAK_TIME,
+  DEFAULT_SESSION_TIME,
+  DEFAULT_SHORT_BREAK_TIME,
+  getContainerStyle,
+  getTime,
+  State,
+  Time,
+} from "./helper";
 
-enum State {
-  Session = "Session",
-  ShortBreak = "ShortBreak",
-  LongBreak = "LongBreak",
-}
-
-type Time = {
-  minutes: number;
-  seconds: number;
-};
-
-const SESSION_TIME = 25 * 60;
-const SHORT_BREAK_TIME = 5 * 60;
-interface TimerContainerProps {}
-
-const TimerContainer: FC<TimerContainerProps> = () => {
+const TimerContainer: FC = () => {
   const [currentState, setCurrentState] = useState<State>(State.Session);
   const [toggleStart, setToggleStart] = useState<boolean>(false);
-  const [sessionTimer, setSessionTimer] = useState<number>(SESSION_TIME);
-  const [shortBreakTimer, setShortBreakTimer] =
-    useState<number>(SHORT_BREAK_TIME);
+  const [sessionTimer, setSessionTimer] =
+    useState<number>(DEFAULT_SESSION_TIME);
+  const [shortBreakTimer, setShortBreakTimer] = useState<number>(
+    DEFAULT_SHORT_BREAK_TIME
+  );
+  const [longBreakTimer, setLongBreakTimer] = useState<number>(
+    DEFAULT_LONG_BREAK_TIME
+  );
+  const [skipCount, setSkipCount] = useState<number>(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,6 +31,8 @@ const TimerContainer: FC<TimerContainerProps> = () => {
           setSessionTimer((prev) => prev - 1);
         } else if (currentState === State.ShortBreak) {
           setShortBreakTimer((prev) => prev - 1);
+        } else {
+          setLongBreakTimer((prev) => prev - 1);
         }
       }
     }, 1000);
@@ -41,33 +43,38 @@ const TimerContainer: FC<TimerContainerProps> = () => {
   }, [currentState, toggleStart]);
 
   const handleRestart = () => {
-    setSessionTimer(SESSION_TIME);
     setToggleStart(false);
-    setShortBreakTimer(SHORT_BREAK_TIME);
+    setSessionTimer(DEFAULT_SESSION_TIME);
+    setShortBreakTimer(DEFAULT_SHORT_BREAK_TIME);
+    setLongBreakTimer(DEFAULT_LONG_BREAK_TIME);
   };
 
   const handleSkip = () => {
-    let state = currentState;
-    if (currentState === State.Session) {
-      state = State.ShortBreak;
-    } else if (currentState === State.ShortBreak) {
-      state = State.Session;
-    }
-    setCurrentState(state);
+    setSkipCount((prev) => {
+      if (prev === 5) {
+        return 0;
+      } else {
+        return prev + 1;
+      }
+    });
 
     setToggleStart(false);
-    setSessionTimer(SESSION_TIME);
-    setShortBreakTimer(SHORT_BREAK_TIME);
+    setSessionTimer(DEFAULT_SESSION_TIME);
+    setShortBreakTimer(DEFAULT_SHORT_BREAK_TIME);
+    setLongBreakTimer(DEFAULT_LONG_BREAK_TIME);
   };
 
-  const getTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return {
-      minutes,
-      seconds,
-    };
-  };
+  useEffect(() => {
+    let state = currentState;
+    if (skipCount === 1 || skipCount === 3) {
+      state = State.ShortBreak;
+    } else if (skipCount === 0 || skipCount === 2 || skipCount === 4) {
+      state = State.Session;
+    } else {
+      state = State.LongBreak;
+    }
+    setCurrentState(state);
+  }, [skipCount, currentState]);
 
   const renderTime = (time: Time) => {
     return (
@@ -78,24 +85,35 @@ const TimerContainer: FC<TimerContainerProps> = () => {
     );
   };
 
+  const styledDiv = useMemo(
+    () => getContainerStyle(currentState),
+    [currentState]
+  );
+
   return (
-    <div className="border-2 border-black w-80 h-40 mx-auto flex flex-col justify-center items-center gap-5">
-      <span>{currentState}</span>
+    <div
+      className={`border-2 border-black w-80 h-40 mx-auto flex flex-col justify-center items-center gap-5 ${styledDiv}`}
+    >
+      <span className="text-xl font-semibold border border-gray-300 px-2">
+        {currentState}
+      </span>
       <span className="text-4xl font-bold">
         {renderTime(
           currentState === State.Session
             ? getTime(sessionTimer)
-            : getTime(shortBreakTimer)
+            : currentState === State.ShortBreak
+            ? getTime(shortBreakTimer)
+            : getTime(longBreakTimer)
         )}
       </span>
       <div className="flex gap-5 items-center">
         <VscDebugRestart
           size={25}
           onClick={handleRestart}
-          className="cursor-pointer"
+          className="cursor-pointer bg-white rounded-full w-7 h-7"
         />
         <button
-          className="border-2 border-black w-20 px-5"
+          className="border-2 border-black w-20 px-5 bg-white rounded-md"
           onClick={() => setToggleStart((prev) => !prev)}
         >
           {toggleStart ? "Pause" : "Start"}
@@ -103,7 +121,7 @@ const TimerContainer: FC<TimerContainerProps> = () => {
         <IoIosSkipForward
           size={25}
           onClick={handleSkip}
-          className="cursor-pointer"
+          className="cursor-pointer bg-white rounded-full w-7 h-7"
         />
       </div>
     </div>
