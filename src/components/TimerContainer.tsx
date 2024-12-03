@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 // helpers
 import {
   CurrentStateType,
@@ -13,6 +13,7 @@ import {
 } from "./helper";
 // component
 import ActionContainer from "./ActionContainer";
+import { ThemeContext } from "../App";
 
 const TimerContainer: FC = () => {
   const [currentStateValue, setCurrentStateValue] = useState<State>(
@@ -28,6 +29,15 @@ const TimerContainer: FC = () => {
     DEFAULT_LONG_BREAK_TIME
   );
   const [skipCount, setSkipCount] = useState<number>(0);
+
+  const context = useContext(ThemeContext);
+
+  const themeStyle = useMemo<string>(() => {
+    if (context?.isDarkMode) {
+      return "bg-gray-700 text-white";
+    }
+    return "bg-white text-gray-700";
+  }, [context?.isDarkMode]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -105,10 +115,12 @@ const TimerContainer: FC = () => {
     <div
       className={`border-2 border-gray-200 w-96 pt-2 pb-5 mx-auto flex flex-col justify-center items-center gap-24 rounded-lg ${styledDiv}`}
     >
-      <span className="text-xl font-semibold border  border-gray-200 px-5 py-2 bg-white">
+      <span
+        className={`text-xl font-semibold border  border-gray-200 px-5 py-2  ${themeStyle}`}
+      >
         {currentStateValue}
       </span>
-      <span className="text-4xl font-bold bg-white py-3 px-8 rounded-md">
+      <span className={`text-4xl font-bold py-3 px-8 rounded-md ${themeStyle}`}>
         {renderTime(getTime(currentState.timer))}
       </span>
       <ActionContainer
@@ -116,6 +128,7 @@ const TimerContainer: FC = () => {
         setToggleStart={setToggleStart}
         currentState={currentState}
         handleSkip={handleSkip}
+        themeStyle={themeStyle}
       />
     </div>
   );

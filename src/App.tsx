@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import TimerContainer from "./components/TimerContainer";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
 
+export const ThemeContext = createContext<{ isDarkMode: boolean } | null>(null);
+
 function App() {
   const [toogleTheme, setToogleTheme] = useState<boolean>(false);
+
   return (
     <div
-      className={`h-screen p-10 ${toogleTheme ? "bg-gray-800" : "bg-white"}`}
+      className={`h-screen p-10 ${toogleTheme ? "bg-gray-700" : "bg-white"}`}
     >
       <div className=" flex justify-end ">
         {toogleTheme ? (
@@ -25,7 +28,9 @@ function App() {
         )}
       </div>
       <div className="pt-40">
-        <TimerContainer />
+        <ThemeContext.Provider value={{ isDarkMode: toogleTheme }}>
+          <TimerContainer />
+        </ThemeContext.Provider>
       </div>
     </div>
   );
