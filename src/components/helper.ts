@@ -9,6 +9,12 @@ export type Time = {
   seconds: number;
 };
 
+export type CurrentStateType = {
+  defaultTime: number;
+  timer: number;
+  setTimer: React.Dispatch<React.SetStateAction<number>>;
+};
+
 export const DEFAULT_SESSION_TIME = 25 * 60;
 export const DEFAULT_SHORT_BREAK_TIME = 5 * 60;
 export const DEFAULT_LONG_BREAK_TIME = 15 * 60;
@@ -30,4 +36,14 @@ export const getContainerStyle = (currentState: State) => {
     className = "bg-yellow-100";
   }
   return className;
+};
+
+export const getCurrentState = (skipCount: number) => {
+  if (skipCount === 1 || skipCount === 3) {
+    return State.ShortBreak;
+  } else if (skipCount === 0 || skipCount === 2 || skipCount === 4) {
+    return State.Session;
+  } else {
+    return State.LongBreak;
+  }
 };
