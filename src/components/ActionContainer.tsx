@@ -24,22 +24,20 @@ const ActionContainer: FC<ActionContainerProps> = ({
   };
 
   return (
-    <div className="flex gap-5 items-center">
+    <div className="flex gap-5 items-center ">
       <VscDebugRestart
-        size={25}
         onClick={handleRestart}
-        className="cursor-pointer bg-white rounded-full w-7 h-7"
+        className="border-2  border-gray-200 cursor-pointer bg-white rounded-full w-10 h-10 p-1"
       />
       <button
-        className="border-2 border-black w-20 px-5 bg-white rounded-md"
+        className="border-2  border-gray-200 w-32 h-12 px-5 bg-white rounded-md"
         onClick={() => setToggleStart(!toggleStart)}
       >
         {toggleStart ? "Pause" : "Start"}
       </button>
       <IoIosSkipForward
-        size={25}
         onClick={handleSkip}
-        className="cursor-pointer bg-white rounded-full w-7 h-7"
+        className="border-2  border-gray-200 cursor-pointer bg-white rounded-full w-10 h-10 p-1"
       />
     </div>
   );

@@ -103,12 +103,12 @@ const TimerContainer: FC = () => {
 
   return (
     <div
-      className={`border-2 border-black w-80 h-40 mx-auto flex flex-col justify-center items-center gap-5 ${styledDiv}`}
+      className={`border-2 border-gray-200 w-96 pt-2 pb-5 mx-auto flex flex-col justify-center items-center gap-24 rounded-lg ${styledDiv}`}
     >
-      <span className="text-xl font-semibold border border-gray-300 px-2">
+      <span className="text-xl font-semibold border  border-gray-200 px-5 py-2 bg-white">
         {currentStateValue}
       </span>
-      <span className="text-4xl font-bold">
+      <span className="text-4xl font-bold bg-white py-3 px-8 rounded-md">
         {renderTime(getTime(currentState.timer))}
       </span>
       <ActionContainer
