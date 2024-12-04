@@ -1,7 +1,7 @@
 import { useState, createContext } from "react";
+import { MdOutlineDarkMode, MdDarkMode } from "react-icons/md";
+// components
 import TimerContainer from "./components/TimerContainer";
-import { MdDarkMode } from "react-icons/md";
-import { MdOutlineDarkMode } from "react-icons/md";
 
 export const ThemeContext = createContext<{ isDarkMode: boolean } | null>(null);
 

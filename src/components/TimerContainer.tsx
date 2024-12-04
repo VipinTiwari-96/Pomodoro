@@ -2,17 +2,17 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 // helpers
 import {
   CurrentStateType,
-  DEFAULT_LONG_BREAK_TIME,
-  DEFAULT_SESSION_TIME,
-  DEFAULT_SHORT_BREAK_TIME,
+  FormikValues,
   getContainerStyle,
   getCurrentState,
+  getSavedTimeValue,
   getTime,
   State,
   Time,
 } from "./helper";
 // component
 import ActionContainer from "./ActionContainer";
+import FormModal from "./FormModal";
 import { ThemeContext } from "../App";
 
 const TimerContainer: FC = () => {
@@ -20,15 +20,17 @@ const TimerContainer: FC = () => {
     State.Session
   );
   const [toggleStart, setToggleStart] = useState<boolean>(false);
-  const [sessionTimer, setSessionTimer] =
-    useState<number>(DEFAULT_SESSION_TIME);
+  const [sessionTimer, setSessionTimer] = useState<number>(
+    getSavedTimeValue(State.Session)
+  );
   const [shortBreakTimer, setShortBreakTimer] = useState<number>(
-    DEFAULT_SHORT_BREAK_TIME
+    getSavedTimeValue(State.ShortBreak)
   );
   const [longBreakTimer, setLongBreakTimer] = useState<number>(
-    DEFAULT_LONG_BREAK_TIME
+    getSavedTimeValue(State.LongBreak)
   );
   const [skipCount, setSkipCount] = useState<number>(0);
+  const [openForm, setOpenForm] = useState<boolean>(false);
 
   const context = useContext(ThemeContext);
 
@@ -67,9 +69,9 @@ const TimerContainer: FC = () => {
     });
 
     setToggleStart(false);
-    setSessionTimer(DEFAULT_SESSION_TIME);
-    setShortBreakTimer(DEFAULT_SHORT_BREAK_TIME);
-    setLongBreakTimer(DEFAULT_LONG_BREAK_TIME);
+    setSessionTimer(getSavedTimeValue(State.Session));
+    setShortBreakTimer(getSavedTimeValue(State.ShortBreak));
+    setLongBreakTimer(getSavedTimeValue(State.LongBreak));
   };
 
   useEffect(() => {
@@ -93,43 +95,75 @@ const TimerContainer: FC = () => {
   const currentState = useMemo<CurrentStateType>(() => {
     if (currentStateValue === State.Session) {
       return {
-        defaultTime: DEFAULT_SESSION_TIME,
+        defaultTime: getSavedTimeValue(State.Session),
         timer: sessionTimer,
         setTimer: setSessionTimer,
       };
     } else if (currentStateValue === State.ShortBreak) {
       return {
-        defaultTime: DEFAULT_SHORT_BREAK_TIME,
+        defaultTime: getSavedTimeValue(State.ShortBreak),
         timer: shortBreakTimer,
         setTimer: setShortBreakTimer,
       };
     }
     return {
-      defaultTime: DEFAULT_LONG_BREAK_TIME,
+      defaultTime: getSavedTimeValue(State.LongBreak),
       timer: longBreakTimer,
       setTimer: setLongBreakTimer,
     };
-  }, [currentStateValue, sessionTimer, shortBreakTimer, longBreakTimer]);
+  }, [
+    currentStateValue,
+    sessionTimer,
+    shortBreakTimer,
+    longBreakTimer,
+    getSavedTimeValue,
+  ]);
 
+  const handleSubmit = (values: FormikValues) => {
+    localStorage.setItem(State.Session, JSON.stringify(values.session));
+    localStorage.setItem(State.ShortBreak, JSON.stringify(values.shortBreak));
+    localStorage.setItem(State.LongBreak, JSON.stringify(values.longBreak));
+
+    setSessionTimer(values.session);
+    setShortBreakTimer(values.shortBreak);
+    setLongBreakTimer(values.longBreak);
+  };
   return (
-    <div
-      className={`border-2 border-gray-200 w-96 pt-2 pb-5 mx-auto flex flex-col justify-center items-center gap-24 rounded-lg ${styledDiv}`}
-    >
-      <span
-        className={`text-xl font-semibold border  border-gray-200 px-5 py-2  ${themeStyle}`}
+    <div className=" w-fit mx-auto flex flex-col items-center gap-3">
+      <button
+        onClick={() => setOpenForm(true)}
+        className="border-2 border-gray-200 w-28 h-10 px-2 rounded-md self-end bg-gray-50 text-gray-700"
       >
-        {currentStateValue}
-      </span>
-      <span className={`text-4xl font-bold py-3 px-8 rounded-md ${themeStyle}`}>
-        {renderTime(getTime(currentState.timer))}
-      </span>
-      <ActionContainer
-        toggleStart={toggleStart}
-        setToggleStart={setToggleStart}
-        currentState={currentState}
-        handleSkip={handleSkip}
-        themeStyle={themeStyle}
-      />
+        Select time
+      </button>
+      {openForm && (
+        <FormModal
+          handleClose={() => setOpenForm(false)}
+          handleSubmit={handleSubmit}
+        />
+      )}
+
+      <div
+        className={`border-2 border-gray-200 w-96 pt-2 pb-5 mx-auto flex flex-col justify-center items-center gap-24 rounded-lg ${styledDiv}`}
+      >
+        <span
+          className={`text-xl font-semibold border  border-gray-200 px-5 py-2  ${themeStyle}`}
+        >
+          {currentStateValue}
+        </span>
+        <span
+          className={`text-4xl font-bold py-3 px-8 rounded-md ${themeStyle}`}
+        >
+          {renderTime(getTime(currentState.timer))}
+        </span>
+        <ActionContainer
+          toggleStart={toggleStart}
+          setToggleStart={setToggleStart}
+          currentState={currentState}
+          handleSkip={handleSkip}
+          themeStyle={themeStyle}
+        />
+      </div>
     </div>
   );
 };
