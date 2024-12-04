@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 import { FormikValues, getValueFromLs, State } from "./helper";
 // shared
 import Button from "../shared/Button";
+import Input from "../shared/Input";
 
 interface FormModalProps {
   handleClose: () => void;
@@ -33,42 +34,30 @@ const FormModal: FC<FormModalProps> = ({ handleClose, handleSubmit }) => {
         />
         <span className="text-sm text-gray-500">
           select time for your customization.
+          <p className="text-xs text-gray-500 mt-2">times are in seconds.</p>
         </span>
         <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-500">times are in seconds.</p>
-            <label className="text-gray-900 font-medium">Session</label>
-            <input
-              type="number"
-              name="session"
-              value={formik.values.session}
-              onChange={formik.handleChange}
-              placeholder="Session time.."
-              className="border border-gray-300 outline-none w-60 h-10 rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-gray-900 font-medium">Short break</label>
-            <input
-              type="number"
-              name="shortBreak"
-              value={formik.values.shortBreak}
-              onChange={formik.handleChange}
-              placeholder="Short break time.."
-              className="border border-gray-300 outline-none w-60 h-10 rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-gray-900 font-medium">Long break</label>
-            <input
-              type="number"
-              name="longBreak"
-              value={formik.values.longBreak}
-              onChange={formik.handleChange}
-              placeholder="Long break time.."
-              className="border border-gray-300 outline-none w-60 h-10 rounded-md p-2"
-            />
-          </div>
+          <Input
+            name="session"
+            value={formik.values.session}
+            onChange={formik.handleChange}
+            label="Session"
+            placeholder="Session time.."
+          />
+          <Input
+            name="shortBreak"
+            value={formik.values.shortBreak}
+            onChange={formik.handleChange}
+            label="Short break"
+            placeholder="Short break time.."
+          />
+          <Input
+            name="longBreak"
+            value={formik.values.longBreak}
+            onChange={formik.handleChange}
+            label="Long break"
+            placeholder="Long break time.."
+          />
         </div>
         <div className="flex justify-between mt-2">
           <Button name="Cancel" handleClick={handleClose} isPrimary={false} />
