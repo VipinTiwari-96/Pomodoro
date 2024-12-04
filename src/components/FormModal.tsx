@@ -2,7 +2,8 @@ import { useFormik } from "formik";
 import React, { FC } from "react";
 import { MdClose } from "react-icons/md";
 // helper
-import { FormikValues, getSavedTimeValue, State } from "./helper";
+import { FormikValues, getValueFromLs, State } from "./helper";
+
 interface FormModalProps {
   handleClose: () => void;
   handleSubmit: (values: FormikValues) => void;
@@ -11,9 +12,9 @@ interface FormModalProps {
 const FormModal: FC<FormModalProps> = ({ handleClose, handleSubmit }) => {
   const formik = useFormik({
     initialValues: {
-      session: getSavedTimeValue(State.Session),
-      shortBreak: getSavedTimeValue(State.ShortBreak),
-      longBreak: getSavedTimeValue(State.LongBreak),
+      session: getValueFromLs(State.Session),
+      shortBreak: getValueFromLs(State.ShortBreak),
+      longBreak: getValueFromLs(State.LongBreak),
     },
     onSubmit: (values: FormikValues) => {
       handleSubmit(values);

@@ -5,8 +5,9 @@ import {
   FormikValues,
   getContainerStyle,
   getCurrentState,
-  getSavedTimeValue,
+  getValueFromLs,
   getTime,
+  setValueInLs,
   State,
   Time,
 } from "./helper";
@@ -21,13 +22,13 @@ const TimerContainer: FC = () => {
   );
   const [toggleStart, setToggleStart] = useState<boolean>(false);
   const [sessionTimer, setSessionTimer] = useState<number>(
-    getSavedTimeValue(State.Session)
+    getValueFromLs(State.Session)
   );
   const [shortBreakTimer, setShortBreakTimer] = useState<number>(
-    getSavedTimeValue(State.ShortBreak)
+    getValueFromLs(State.ShortBreak)
   );
   const [longBreakTimer, setLongBreakTimer] = useState<number>(
-    getSavedTimeValue(State.LongBreak)
+    getValueFromLs(State.LongBreak)
   );
   const [skipCount, setSkipCount] = useState<number>(0);
   const [openForm, setOpenForm] = useState<boolean>(false);
@@ -69,9 +70,9 @@ const TimerContainer: FC = () => {
     });
 
     setToggleStart(false);
-    setSessionTimer(getSavedTimeValue(State.Session));
-    setShortBreakTimer(getSavedTimeValue(State.ShortBreak));
-    setLongBreakTimer(getSavedTimeValue(State.LongBreak));
+    setSessionTimer(getValueFromLs(State.Session));
+    setShortBreakTimer(getValueFromLs(State.ShortBreak));
+    setLongBreakTimer(getValueFromLs(State.LongBreak));
   };
 
   useEffect(() => {
@@ -95,19 +96,19 @@ const TimerContainer: FC = () => {
   const currentState = useMemo<CurrentStateType>(() => {
     if (currentStateValue === State.Session) {
       return {
-        defaultTime: getSavedTimeValue(State.Session),
+        defaultTime: getValueFromLs(State.Session),
         timer: sessionTimer,
         setTimer: setSessionTimer,
       };
     } else if (currentStateValue === State.ShortBreak) {
       return {
-        defaultTime: getSavedTimeValue(State.ShortBreak),
+        defaultTime: getValueFromLs(State.ShortBreak),
         timer: shortBreakTimer,
         setTimer: setShortBreakTimer,
       };
     }
     return {
-      defaultTime: getSavedTimeValue(State.LongBreak),
+      defaultTime: getValueFromLs(State.LongBreak),
       timer: longBreakTimer,
       setTimer: setLongBreakTimer,
     };
@@ -116,13 +117,13 @@ const TimerContainer: FC = () => {
     sessionTimer,
     shortBreakTimer,
     longBreakTimer,
-    getSavedTimeValue,
+    getValueFromLs,
   ]);
 
   const handleSubmit = (values: FormikValues) => {
-    localStorage.setItem(State.Session, JSON.stringify(values.session));
-    localStorage.setItem(State.ShortBreak, JSON.stringify(values.shortBreak));
-    localStorage.setItem(State.LongBreak, JSON.stringify(values.longBreak));
+    setValueInLs(State.Session, values.session);
+    setValueInLs(State.ShortBreak, values.shortBreak);
+    setValueInLs(State.LongBreak, values.longBreak);
 
     setSessionTimer(values.session);
     setShortBreakTimer(values.shortBreak);

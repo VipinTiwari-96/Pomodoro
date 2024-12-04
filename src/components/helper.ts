@@ -53,7 +53,11 @@ export const getCurrentState = (skipCount: number): State => {
   }
 };
 
-export const getSavedTimeValue = (key: State): number => {
+export const setValueInLs = (key: State, value: number) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+export const getValueFromLs = (key: State): number => {
   const savedSessionTime = localStorage.getItem(key);
   const savedShortBreakTime = localStorage.getItem(key);
   const savedLongBreakTime = localStorage.getItem(key);
