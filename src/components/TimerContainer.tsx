@@ -79,7 +79,7 @@ const TimerContainer: FC = () => {
 
   useEffect(() => {
     setCurrentStateValue(getCurrentState(skipCount));
-  }, [skipCount, getCurrentState, setCurrentStateValue]);
+  }, [skipCount, setCurrentStateValue]);
 
   const renderTime = (time: Time) => {
     return (
@@ -92,7 +92,7 @@ const TimerContainer: FC = () => {
 
   const styledDiv = useMemo<string>(
     () => getContainerStyle(currentStateValue),
-    [currentStateValue, getContainerStyle]
+    [currentStateValue]
   );
 
   const currentState = useMemo<CurrentStateType>(() => {
