@@ -114,13 +114,7 @@ const TimerContainer: FC = () => {
       timer: longBreakTimer,
       setTimer: setLongBreakTimer,
     };
-  }, [
-    currentStateValue,
-    sessionTimer,
-    shortBreakTimer,
-    longBreakTimer,
-    getValueFromLs,
-  ]);
+  }, [currentStateValue, sessionTimer, shortBreakTimer, longBreakTimer]);
 
   const handleSubmit = (values: FormikValues) => {
     setValueInLs(State.Session, values.session);
