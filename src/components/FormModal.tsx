@@ -3,6 +3,8 @@ import React, { FC } from "react";
 import { MdClose } from "react-icons/md";
 // helper
 import { FormikValues, getValueFromLs, State } from "./helper";
+// shared
+import Button from "../shared/Button";
 
 interface FormModalProps {
   handleClose: () => void;
@@ -69,19 +71,9 @@ const FormModal: FC<FormModalProps> = ({ handleClose, handleSubmit }) => {
           </div>
         </div>
         <div className="flex justify-between mt-2">
-          <button
-            onClick={handleClose}
-            className="border border-gray-500 w-28 h-10 px-2 rounded-md self-end bg-gray-500 text-white "
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => formik.handleSubmit()}
-            name="submit"
-            className="border border-blue-500 w-28 h-10 px-2 rounded-md self-end bg-blue-500 text-white "
-          >
-            Submit
-          </button>
+          <Button name="Cancel" handleClick={handleClose} isPrimary={false} />
+
+          <Button name="Submit" handleClick={() => formik.handleSubmit()} />
         </div>
       </div>
     </div>

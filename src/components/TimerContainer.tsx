@@ -15,6 +15,8 @@ import {
 import ActionContainer from "./ActionContainer";
 import FormModal from "./FormModal";
 import { ThemeContext } from "../App";
+// shared
+import Button from "../shared/Button";
 
 const TimerContainer: FC = () => {
   const [currentStateValue, setCurrentStateValue] = useState<State>(
@@ -131,12 +133,11 @@ const TimerContainer: FC = () => {
   };
   return (
     <div className=" w-fit mx-auto flex flex-col items-center gap-3">
-      <button
-        onClick={() => setOpenForm(true)}
-        className="border-2 border-gray-200 w-28 h-10 px-2 rounded-md self-end bg-gray-50 text-gray-700"
-      >
-        Select time
-      </button>
+      <Button
+        name="Custom time"
+        handleClick={() => setOpenForm(true)}
+        className="self-end"
+      />
       {openForm && (
         <FormModal
           handleClose={() => setOpenForm(false)}

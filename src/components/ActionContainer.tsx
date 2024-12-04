@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { IoIosSkipForward } from "react-icons/io";
 import { VscDebugRestart } from "react-icons/vsc";
+// helper
 import { CurrentStateType } from "./helper";
+// shared
+import Button from "../shared/Button";
 
 interface ActionContainerProps {
   toggleStart: boolean;
@@ -31,12 +34,11 @@ const ActionContainer: FC<ActionContainerProps> = ({
         onClick={handleRestart}
         className={`border-2  border-gray-200 cursor-pointer rounded-full w-10 h-10 p-1 ${themeStyle}`}
       />
-      <button
-        className={`border-2  border-gray-200 w-32 h-12 px-5 rounded-md ${themeStyle}`}
-        onClick={() => setToggleStart(!toggleStart)}
-      >
-        {toggleStart ? "Pause" : "Start"}
-      </button>
+      <Button
+        name={toggleStart ? "Pause" : "Start"}
+        handleClick={() => setToggleStart(!toggleStart)}
+        className=" w-32 h-12"
+      />
       <IoIosSkipForward
         onClick={handleSkip}
         className={`border-2  border-gray-200 cursor-pointer rounded-full w-10 h-10 p-1 ${themeStyle}`}
